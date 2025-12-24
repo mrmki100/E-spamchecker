@@ -7,6 +7,7 @@ import { getXrCustomConfigs, getXrWarpConfigs } from "@xray/configs";
 import { fetchWarpAccounts } from "@warp";
 import { VlOverWSHandler } from "@vless";
 import { TrOverWSHandler } from "@trojan";
+import { SsOverWSHandler } from "@ss";
 import JSZip from "jszip";
 import { HttpStatus, respond } from "@common";
 
@@ -29,6 +30,11 @@ export async function handleWebsocket(request: Request): Promise<Response> {
 
             case 'tr':
                 return await TrOverWSHandler(request);
+            
+            // --- اضافه کردن کیس جدید ---
+            case 'ss':
+                return await SsOverWSHandler(request);
+            // ---------------------------
 
             default:
                 return await fallback(request);
