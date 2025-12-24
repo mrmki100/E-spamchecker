@@ -62,7 +62,12 @@ export function buildWebsocketOutbound(
     const { host, sni, allowInsecure } = selectSniHost(address);
 
     const tls = isTLS ? buildTLS(protocol, "tls", allowInsecure, sni, "http/1.1", fingerprint) : {};
-    const transport = buildTransport("ws", undefined, generateWsPath(protocol), host, undefined, 2560);
+    
+    // --- تغییرات اینجاست ---
+    // 1. تغییر "ws" به "httpupgrade"
+    // 2. حذف عدد 2560 (Early Data) چون برای HTTPUpgrade در این تابع لازم نیست
+    const transport = buildTransport("httpupgrade", undefined, generateWsPath(protocol), host);
+    // -----------------------
 
     if (protocol === _VL_) return buildOutbound<VlessOutbound>(remark, protocol, address, port, enableIPv6, enableTFO, tls, transport, {
         "uuid": userID,
