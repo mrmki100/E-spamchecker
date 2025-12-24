@@ -1,4 +1,4 @@
-name = "e-panel"
+name = "e-spamchecker"
 main = "dist/worker.js"
 compatibility_date = "2024-01-01"
 
@@ -8,3 +8,4 @@ command = "npm run build"
 [[kv_namespaces]]
 binding = "bpb"
 id = "10577fb93f594108bbea0eeb6de4af9b"
+
