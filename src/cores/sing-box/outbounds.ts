@@ -63,7 +63,13 @@ export function buildWebsocketOutbound(
     } = globalThis;
 
     const { host, sni, allowInsecure } = selectSniHost(address);
-    const transport = buildTransport("ws", "none", generateWsPath(protocol), host, undefined, 2560);
+
+    // --- تغییرات اینجاست ---
+    // 1. تغییر "ws" به "httpupgrade"
+    // 2. حذف آرگومان آخر (2560) چون HTTPUpgrade نیازی به EarlyData در تنظیمات ترنسپورت ندارد
+    const transport = buildTransport("httpupgrade", "none", generateWsPath(protocol), host);
+    // -----------------------
+
     const tls = isHttps(port)
         ? buildTLS("tls", isFragment, allowInsecure, sni, "http/1.1", fingerprint)
         : undefined;
