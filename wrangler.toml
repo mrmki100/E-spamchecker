@@ -9,3 +9,7 @@ command = "npm run build"
 binding = "kv"
 id = "6dbd9237cb2e4766879bd072551584ef"
 
+[vars]
+UUID = "21bb0aad-c868-40a8-a896-5a9afdb05c5c"
+TROJAN_PASS = "EfN!9o*{Ov[uO4P;"
+SUB_PATH = "RcHPaAc1YerUhXcS"
