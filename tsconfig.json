@@ -22,6 +22,7 @@
             "@common": ["common/common"],
             "@vless": ["protocols/websocket/vless"],
             "@trojan": ["protocols/websocket/trojan"],
+            "@ss": ["protocols/websocket/shadowsocks"],
             "@warp": ["protocols/warp"]
         }
     }
