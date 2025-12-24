@@ -123,15 +123,18 @@ export function buildWebsocketOutbound(
     const {
         settings: { fingerprint, enableTFO },
         globalConfig: { userID, TrPass },
-        dict: { _VL_ }
+        // اینجا _SS_ را از دیکشنری اضافه کردیم
+        dict: { _VL_, _SS_ }
     } = globalThis;
 
     const isTLS = isHttps(port);
     const { host, sni, allowInsecure } = selectSniHost(address);
 
+    // تنظیمات استریم (مشترک برای همه پروتکل‌ها)
+    // اینجا از httpupgrade استفاده می‌کنیم که برای همه (حتی شادوساکس) عالی کار می‌کند
     const streamSettings: StreamSettings = {
-        network: "ws",
-        ...buildTransport("ws", "none", `${generateWsPath(protocol)}?ed=2560`, host),
+        network: "httpupgrade",
+        ...buildTransport("httpupgrade", "none", generateWsPath(protocol), host),
         security: isTLS ? "tls" : "none",
         tlsSettings: isTLS ? buildTlsSettings(sni, fingerprint, "http/1.1", allowInsecure) : undefined,
         sockopt: isFragment
@@ -139,7 +142,7 @@ export function buildWebsocketOutbound(
             : buildSockopt(true, enableTFO, "UseIP"),
     };
 
-
+    // 1. اگر پروتکل VLESS بود
     if (protocol === _VL_) return buildOutbound<VlessSettings>(protocol, "proxy", false, {
         vnext: [{
             address,
@@ -153,6 +156,17 @@ export function buildWebsocketOutbound(
         }]
     }, streamSettings);
 
+    // 2. اگر پروتکل Shadowsocks بود (این قسمت جدید است)
+    if (protocol === _SS_) return buildOutbound<ShadowsocksSettings>(protocol, "proxy", false, {
+        servers: [{
+            address,
+            port,
+            method: "none",     // نکته مهم: متد باید حتما none باشد
+            password: userID    // پسورد فرمالیته است (هر چیزی می‌تواند باشد)
+        }]
+    }, streamSettings);
+
+    // 3. در غیر این صورت (پیش‌فرض) Trojan است
     return buildOutbound<TrojanSettings>(protocol, "proxy", false, {
         servers: [{
             address,
