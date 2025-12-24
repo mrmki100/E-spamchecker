@@ -42,10 +42,16 @@ async function fetchDNSRecords(url: string, recordType: number) {
 export function getProtocols() {
     const {
         settings: { VLConfigs, TRConfigs },
-        dict: { _VL_, _TR_ }
+        // 1. اینجا _SS_ را اضافه کنید
+        dict: { _VL_, _TR_, _SS_ }
     } = globalThis;
 
-    return [].concatIf(VLConfigs, _VL_).concatIf(TRConfigs, _TR_);
+    // 2. خط آخر را به این شکل تغییر دهید
+    // (ما true را پاس دادیم تا شادوساکس همیشه در لینک باشد)
+    return []
+        .concatIf(VLConfigs, _VL_)
+        .concatIf(TRConfigs, _TR_)
+        .concatIf(true, _SS_);
 }
 
 export async function getConfigAddresses(isFragment: boolean): Promise<string[]> {
